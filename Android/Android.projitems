@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e62a7ba6-14a0-4de8-927f-4a9af4279ff3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Android.Utilities</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Activities\BaseActivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Activities\SettingsFragment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BaseApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BaseConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\TopAlignedImageView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\AndroidDatabaseConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Bundle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ContextWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Drawables\Drawable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\DividerItemDecoration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\GenericAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\TabFragmentsAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\TabFragment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LogcatWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimpleRunnable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\WrapLayoutManager.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Remoting", "Remoting\Utilities.Remoting.csproj", "{F5D68702-5614-4A6A-A7BC-3210D2C915A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Remoting", "Remoting", "{873E199B-3DFD-49DF-ABC7-E1E401496A83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Remoting.Http", "Remoting.Http\Utilities.Remoting.Http.csproj", "{CEAAB8B2-6A2D-4178-A03F-2D853D1C644C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities.Shared", "Shared\Utilities.Shared.shproj", "{6D77D9F7-85BB-45EA-A467-8AC2882608D0}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities.Python", "Python\Utilities.Python.shproj", "{AC91026F-6383-4CAF-9E30-AC00CE74EA45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "[Experimental]", "[Experimental]", "{E0F3DB32-D4C1-46B8-A86A-70391AD885FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Model", "Model\Utilities.Model.csproj", "{A222A499-B213-468C-9D40-9421A384FF96}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities.Android", "Android\Utilities.Android.shproj", "{E62A7BA6-14A0-4DE8-927F-4A9AF4279FF3}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities.WPF", "WPF\Utilities.WPF.shproj", "{6AB891FB-9B1A-4C9F-AEAD-02EEFB436F1F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities.Windows", "Windows\Utilities.Windows.shproj", "{CB5516B0-EB4F-4D96-86C5-EB6E3F25F346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Common", "Common\Utilities.Common.csproj", "{50730BD9-8439-4180-87DA-E2EDECD1B226}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Serialization", "Serialization\Utilities.Serialization.csproj", "{FF730ADD-1BA2-4B0E-BF74-65AED2D7AC07}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WPF\WPF.projitems*{6ab891fb-9b1a-4c9f-aead-02eefb436f1f}*SharedItemsImports = 13
+		Shared\Utilities.projitems*{6d77d9f7-85bb-45ea-a467-8ac2882608d0}*SharedItemsImports = 13
+		Python\Python.projitems*{ac91026f-6383-4caf-9e30-ac00ce74ea45}*SharedItemsImports = 13
+		Windows\Windows.projitems*{cb5516b0-eb4f-4d96-86c5-eb6e3f25f346}*SharedItemsImports = 13
+		Android\Android.projitems*{e62a7ba6-14a0-4de8-927f-4a9af4279ff3}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5D68702-5614-4A6A-A7BC-3210D2C915A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D68702-5614-4A6A-A7BC-3210D2C915A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D68702-5614-4A6A-A7BC-3210D2C915A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D68702-5614-4A6A-A7BC-3210D2C915A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEAAB8B2-6A2D-4178-A03F-2D853D1C644C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEAAB8B2-6A2D-4178-A03F-2D853D1C644C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEAAB8B2-6A2D-4178-A03F-2D853D1C644C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEAAB8B2-6A2D-4178-A03F-2D853D1C644C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A222A499-B213-468C-9D40-9421A384FF96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A222A499-B213-468C-9D40-9421A384FF96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A222A499-B213-468C-9D40-9421A384FF96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A222A499-B213-468C-9D40-9421A384FF96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50730BD9-8439-4180-87DA-E2EDECD1B226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50730BD9-8439-4180-87DA-E2EDECD1B226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50730BD9-8439-4180-87DA-E2EDECD1B226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50730BD9-8439-4180-87DA-E2EDECD1B226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF730ADD-1BA2-4B0E-BF74-65AED2D7AC07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF730ADD-1BA2-4B0E-BF74-65AED2D7AC07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF730ADD-1BA2-4B0E-BF74-65AED2D7AC07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF730ADD-1BA2-4B0E-BF74-65AED2D7AC07}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F5D68702-5614-4A6A-A7BC-3210D2C915A5} = {873E199B-3DFD-49DF-ABC7-E1E401496A83}
+		{CEAAB8B2-6A2D-4178-A03F-2D853D1C644C} = {873E199B-3DFD-49DF-ABC7-E1E401496A83}
+		{A222A499-B213-468C-9D40-9421A384FF96} = {E0F3DB32-D4C1-46B8-A86A-70391AD885FA}
+	EndGlobalSection
+EndGlobal

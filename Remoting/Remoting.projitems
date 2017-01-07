@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7626b1f2-1d31-41b8-a8d6-9492b09b600d</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Remoting</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Http\HttpRemotingSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Http\HttpRemotingClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Http\HttpRemotingServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObjectIndex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemotingSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemotingClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemotingServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\TcpRemotingClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\TcpRemotingSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tcp\TcpRemotingServer.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6ab891fb-9b1a-4c9f-aead-02eefb436f1f</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WPF</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DelegateCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependencyModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DependsOnAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPropertyUpdatable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VisualSnapshotConverter.cs" />
+  </ItemGroup>
+</Project>

@@ -250,3 +250,5 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/Python/Binaries/2.7.9 - 32-bit
+*.xsync

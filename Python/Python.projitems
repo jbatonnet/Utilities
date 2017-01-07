@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6d77d9f7-85bb-45ea-a467-8ac2882608d0</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Python</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)2.7\PythonAPI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)2.7\PythonInterop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)2.7\PythonWrapper.cs" />
+  </ItemGroup>
+</Project>
