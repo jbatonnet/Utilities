@@ -870,6 +870,10 @@ namespace Python
         [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
         public static extern void _Py_Dealloc(IntPtr pointer);
 
+        public static readonly IntPtr Py_single_input = new IntPtr(256);
+        public static readonly IntPtr Py_file_input = new IntPtr(257);
+        public static readonly IntPtr Py_eval_input = new IntPtr(258);
+
 
 
         public const int METH_VARARGS = 0x0001;

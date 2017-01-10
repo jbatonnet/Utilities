@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CEAAB8B2-6A2D-4178-A03F-2D853D1C644C}</ProjectGuid>
+    <ProjectGuid>{18D3636D-E0FC-4F93-A468-C77449C65031}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Utilities.Remoting.Http</RootNamespace>

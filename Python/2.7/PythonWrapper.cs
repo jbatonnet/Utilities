@@ -15,13 +15,22 @@ using static Python.Python;
 
 namespace Python
 {
+    /// <summary>
+    /// Wraps a Python object and provides methodes to manipulate it
+    /// </summary>
     public class PythonObject :
 #if DYNAMIC
         DynamicObject,
 #endif
         IEquatable<PythonObject>, IEnumerable<KeyValuePair<string, PythonObject>>
     {
+        /// <summary>
+        /// The pointer of this Python object
+        /// </summary>
         public IntPtr Pointer { get; protected set; }
+        /// <summary>
+        /// The Python Type of this object
+        /// </summary>
         public PythonType Type
         {
             get
@@ -32,11 +41,20 @@ namespace Python
         }
 
         protected PythonObject() { }
+        /// <summary>
+        /// Wraps the specified Python object pointer
+        /// </summary>
+        /// <param name="pointer"></param>
         public PythonObject(IntPtr pointer)
         {
             Pointer = pointer;
         }
 
+        /// <summary>
+        /// Tries to convert the specified managed object in a Python object
+        /// </summary>
+        /// <param name="value">The managed object to convert</param>
+        /// <returns>The wrapped Python object</returns>
         public static PythonObject From(object value)
         {
             if (value == null)
@@ -62,6 +80,12 @@ namespace Python
 
             if (type == typeof(float)) return PyFloat_FromDouble((float)value);
             if (type == typeof(double)) return PyFloat_FromDouble((double)value);
+
+            if (type.IsValueType)
+            {
+                // TODO: Generate Python type with slots
+                // TODO: Send raw structure to Python
+            }
 
             return null;
         }
@@ -259,7 +283,7 @@ namespace Python
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             using (PythonException.Checker)
-                PyObject_SetAttrString(Pointer, binder.Name, (IntPtr)value);
+                PyObject_SetAttrString(Pointer, binder.Name, From(value));
 
             return true;
         }
@@ -283,8 +307,28 @@ namespace Python
             result = null;
             return false;
         }
+        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
+        {
+            using (PythonException.Checker)
+            {
+                PythonFunction function = (PythonFunction)PyObject_GetAttrString(Pointer, binder.Name);
+                if (function != null)
+                {
+                    result = function.Invoke(args.Select(a => From(a)).ToArray());
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
 #endif
 
+        /// <summary>
+        /// The the specified Python attribute of this object
+        /// </summary>
+        /// <param name="name">The name of the attribute to get</param>
+        /// <returns>The attribute</returns>
         public PythonObject GetAttribute(string name)
         {
             using (PythonException.Checker)

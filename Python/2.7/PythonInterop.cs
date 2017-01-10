@@ -344,12 +344,12 @@ namespace Python
             if (pointer == Py_None)
                 return null;
 
+            if (PythonToClr.ContainsKey(pointer))
+                return PythonToClr[pointer];
+
             object result = PythonObject.Convert(pointer);
             if (result != null)
                 return result;
-
-            if (PythonToClr.ContainsKey(pointer))
-                return PythonToClr[pointer];
 
             // TODO: Build a .NET wrapper
             // Return the wrapper
@@ -398,6 +398,7 @@ namespace Python
         {
             Pointer = Type.Create();
             instances.Add(Pointer, this);
+            ObjectManager.Register(this, Pointer);
 
             Parent = parent;
             Name = name;
@@ -542,13 +543,20 @@ namespace Python
                 bool match = true;
                 object[] parameters = new object[parametersInfo.Length];
 
-                for (int i = 0; i < parameters.Length; i++)
+                int extension = method.IsDefined(typeof(ExtensionAttribute), false) ? 1 : 0;
+                if (extension > 0)
+                    parameters[0] = instance;
+
+                int clrIndex = parameters.Length - 1;
+                int pythonIndex = clrIndex - extension;
+
+                for (; pythonIndex >= 0; pythonIndex--, clrIndex--)
                 {
-                    if (i >= pythonParameters.Length)
+                    if (pythonIndex >= pythonParameters.Length)
                     {
-                        if (parametersInfo[i].IsOptional)
+                        if (parametersInfo[clrIndex].IsOptional)
                         {
-                            parameters[i] = parametersInfo[i].DefaultValue;
+                            parameters[clrIndex] = parametersInfo[clrIndex].DefaultValue;
                             continue;
                         }
                         else
@@ -559,13 +567,13 @@ namespace Python
                     }
 
                     object parameter;
-                    if (!TryConvert(pythonParameters[i], parametersInfo[i].ParameterType, out parameter))
+                    if (!TryConvert(pythonParameters[pythonIndex], parametersInfo[clrIndex].ParameterType, out parameter))
                     {
                         match = false;
                         break;
                     }
 
-                    parameters[i] = parameter;
+                    parameters[clrIndex] = parameter;
                 }
 
                 if (!match)
@@ -650,9 +658,9 @@ namespace Python
                     return (value as PythonObject).GetAttribute(name);
             }
 
-            bool extension = CollectExtensionMethods(value.GetType(), name).Any();
-            if (extension)
-                return new PythonTuple(0); // TODO: return virtual method object
+            IEnumerable<MethodInfo> extensions = CollectExtensionMethods(value.GetType(), name);
+            if (extensions.Any())
+                return new PythonFunction(name, (a, b) => ExtensionMethodCallback(value, extensions, (PythonTuple)(PythonObject)b)); // TODO: return virtual method object
             else
                 throw new Exception("AttributeError");
         }
@@ -668,6 +676,15 @@ namespace Python
             foreach (MethodInfo methodInfo in typeAssemblyMethods)
                 yield return methodInfo;
         }
+        private static PythonObject ExtensionMethodCallback(object instance, IEnumerable<MethodInfo> methods, PythonTuple args)
+        {
+            object result;
+            if (!TryCallMethod(methods, instance, args, out result))
+                throw new ArgumentException("Could not find any overload matching the specified arguments");
+
+            return ObjectManager.ToPython(result);
+        }
+
 
         /*
             Python system methods
