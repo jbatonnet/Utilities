@@ -101,10 +101,10 @@ namespace Utilities.Remoting
 
             serializer = new Serializer(this);
 
-            Stream blockingStream = new BlockingStream(stream);
-            //blockingStream = new DebugStream(blockingStream, "Server");
+            stream = new BlockingStream(stream);
+            //stream = new DebugStream(stream, "Server");
 
-            muxer = new MuxerStream(blockingStream) { Marker = "Server" };
+            muxer = new MuxerStream(stream) { Marker = "Server" };
             commandStream = muxer.GetCanal("Commands");
             eventStream = muxer.GetCanal("Events");
 
