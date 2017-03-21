@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F5D68702-5614-4A6A-A7BC-3210D2C915A5}</ProjectGuid>
+    <ProjectGuid>{77467D24-F013-438F-AD74-5D7ADDFA5E48}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Utilities.Remoting</RootNamespace>
