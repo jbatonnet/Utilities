@@ -77,8 +77,6 @@ namespace Python
             TypeBuilder typeBuilder = module.DefineType(typeName, TypeAttributes.Public | TypeAttributes.Class, baseType);
             FieldInfo pointerField = typeBuilder.DefineField("pointer", typeof(IntPtr), FieldAttributes.Private);
             List<ConstructorBuilder> constructorBuilders = new List<ConstructorBuilder>();
-            MethodBuilder strMethodBuilder = null;
-            MethodBuilder hashMethodBuilder = null;
 
             foreach (var member in pythonObject)
             {
@@ -380,7 +378,7 @@ namespace Python
 
     public class ClrNamespace : PythonObject
     {
-        public static PythonClass Type { get; private set; }
+        public new static PythonClass Type { get; private set; }
 
         private static Dictionary<string, ClrNamespace> namespaces = new Dictionary<string, ClrNamespace>();
         private static Dictionary<IntPtr, ClrNamespace> instances = new Dictionary<IntPtr, ClrNamespace>();
@@ -440,7 +438,7 @@ namespace Python
     }
     public class ClrType : PythonClass
     {
-        public Type Type { get; private set; }
+        public new Type Type { get; private set; }
 
         public ClrType(Type type) : base(type.FullName)
         {
