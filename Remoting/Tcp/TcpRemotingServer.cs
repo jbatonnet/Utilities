@@ -61,7 +61,7 @@ namespace Utilities.Remoting.Tcp
             TcpClient tcpClient = tcpListener.EndAcceptTcpClient(result);
             NetworkStream networkStream = tcpClient.GetStream();
 
-            BinaryRemotingServerClient client = new BinaryRemotingServerClient(networkStream, baseObjects);
+            BinaryRemotingHandler client = new BinaryRemotingHandler(networkStream, baseObjects);
         }
 
         public override string ToString() => $"TcpRemotingServer {{ Port: {Port} }}";

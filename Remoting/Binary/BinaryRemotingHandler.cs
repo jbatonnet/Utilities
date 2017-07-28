@@ -10,13 +10,13 @@ namespace Utilities.Remoting
     using RemoteId = Int32;
     using RemoteObject = MarshalByRefObject;
 
-    public class BinaryRemotingServerClient
+    public class BinaryRemotingHandler
     {
         private class Serializer : BinaryRemotingSerializer
         {
-            public BinaryRemotingServerClient Client { get; }
+            public BinaryRemotingHandler Client { get; }
 
-            public Serializer(BinaryRemotingServerClient client)
+            public Serializer(BinaryRemotingHandler client)
             {
                 Client = client;
             }
@@ -26,7 +26,7 @@ namespace Utilities.Remoting
                 RemoteObject remoteObject = value as RemoteObject;
                 if (remoteObject != null)
                 {
-                    RemoteId remoteId = Client.remoteObjectIndex.GetId(remoteObject);
+                    RemoteId remoteId = Client.Registry.RegisterObject(remoteObject);
                     WriteRemoteObject(stream, remoteId, remoteObject);
                     return;
                 }
@@ -81,7 +81,7 @@ namespace Utilities.Remoting
         }
 
         public Stream Stream { get; }
-        public IDictionary<string, RemoteObject> BaseObjects { get; }
+        public RemotingRegistry Registry { get; }
 
         private Serializer serializer;
 
@@ -89,15 +89,15 @@ namespace Utilities.Remoting
         private Stream commandStream;
         private Stream eventStream;
 
-        private ObjectIndex<RemoteObject> remoteObjectIndex = new ObjectIndex<RemoteObject>();
+        private Dictionary<RemoteId, RemotingLease> remotingLeases = new Dictionary<RemoteId, RemotingLease>();
         private ObjectIndex<Delegate> delegateIndex = new ObjectIndex<Delegate>();
 
         private byte[] buffer = new byte[1];
 
-        public BinaryRemotingServerClient(Stream stream, IDictionary<string, RemoteObject> baseObjects)
+        public BinaryRemotingHandler(Stream stream, RemotingRegistry registry)
         {
             Stream = stream;
-            BaseObjects = baseObjects;
+            Registry = registry;
 
             serializer = new Serializer(this);
 
@@ -147,21 +147,18 @@ namespace Utilities.Remoting
 
         private void ProcessGet()
         {
-            RemoteObject remoteObject;
-            RemoteId remoteId;
+            RemotingLease remotingLease;
 
             using (BinaryReader reader = new BinaryReader(commandStream, Encoding.Default, true))
             {
                 string name = reader.ReadString();
 
-                if (!BaseObjects.TryGetValue(name, out remoteObject))
+                if (!Registry.TryGetObject(name, out remotingLease))
                     throw new Exception("Could not find the specified object");
-
-                remoteId = remoteObjectIndex.GetId(remoteObject);
             }
 
             commandStream.WriteByte((byte)BinaryRemotingCommand.Result);
-            serializer.WriteRemoteObject(commandStream, remoteId, remoteObject);
+            serializer.WriteRemoteObject(commandStream, remotingLease.Id, remotingLease.Object);
         }
         private void ProcessCall()
         {
@@ -172,15 +169,14 @@ namespace Utilities.Remoting
 
             Type type;
             MethodInfo typeMethod;
-            RemoteObject remoteObject;
+            RemotingLease remotingLease;
 
             using (BinaryReader reader = new BinaryReader(commandStream, Encoding.Default, true))
             {
                 // Find remote object
                 RemoteId remoteId = reader.ReadInt32();
-
-                remoteObject = remoteObjectIndex.GetObject(remoteId);
-                if (remoteObject == null)
+                
+                if (!remotingLeases.TryGetValue(remoteId, out remotingLease))
                     throw new Exception("Could not find specified remote object");
 
                 // Method info
@@ -198,7 +194,7 @@ namespace Utilities.Remoting
                 methodArgs = methodParameterValues.ToArray();
 
                 // Find the specified method
-                type = remoteObject.GetType();
+                type = remotingLease.Object.GetType();
                 typeMethod = type.GetMethod(methodName, methodSignature.ToArray());
             }
 
@@ -207,7 +203,9 @@ namespace Utilities.Remoting
                 // Invoke the method
                 try
                 {
-                    object result = typeMethod.Invoke(remoteObject, methodArgs);
+                    RemotingAccessPolicy accessPolicy = remotingLease.Access.GetAccessPolicy(typeMethod);
+
+                    object result = typeMethod.Invoke(remotingLease.Object, methodArgs);
 
                     writer.Write((byte)BinaryRemotingCommand.Result);
 

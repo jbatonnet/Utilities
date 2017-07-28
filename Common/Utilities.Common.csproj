@@ -45,6 +45,7 @@
     <Compile Include="Extensions\Array.cs" />
     <Compile Include="Extensions\Byte.cs" />
     <Compile Include="Extensions\Collections\Generic\IDictionary.cs" />
+    <Compile Include="Extensions\Collections\Generic\ICollection.cs" />
     <Compile Include="Extensions\Collections\Generic\IEnumerable.cs" />
     <Compile Include="Extensions\Collections\Generic\List.cs" />
     <Compile Include="Extensions\ComponentModel\BackgroundWorker.cs" />

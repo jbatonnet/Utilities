@@ -47,7 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemotingClient.cs" />
     <Compile Include="RemotingSerializer.cs" />
+    <Compile Include="Security\RemotingLease.cs" />
+    <Compile Include="RemotingRegistry.cs" />
     <Compile Include="RemotingServer.cs" />
+    <Compile Include="Security\RemotingAccessPolicy.cs" />
     <Compile Include="TaskHelper.cs" />
     <Compile Include="Tcp\TcpRemotingClient.cs" />
     <Compile Include="Binary\BinaryRemotingSerializer.cs" />
