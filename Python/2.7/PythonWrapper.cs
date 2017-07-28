@@ -505,7 +505,7 @@ namespace Python
 
     public class PythonBoolean : PythonObject
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -594,7 +594,7 @@ namespace Python
     }
     public class PythonString : PythonSequence
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -627,7 +627,7 @@ namespace Python
     }
     public class PythonList : PythonSequence
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -690,7 +690,7 @@ namespace Python
     }
     public class PythonTuple : PythonSequence
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -745,7 +745,7 @@ namespace Python
     }
     public class PythonDictionary : PythonSequence, IDictionary<PythonObject, PythonObject>
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -914,7 +914,7 @@ namespace Python
     }
     public class PythonFunction : PythonObject
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -1000,7 +1000,7 @@ namespace Python
     }
     public class PythonMethod : PythonObject
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -1040,7 +1040,7 @@ namespace Python
     }
     public class PythonType : PythonObject
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -1135,7 +1135,7 @@ namespace Python
     }
     public class PythonClass : PythonObject
     {
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
@@ -1318,7 +1318,7 @@ namespace Python
             }
         }
 
-        public static PythonType Type
+        public new static PythonType Type
         {
             get
             {
