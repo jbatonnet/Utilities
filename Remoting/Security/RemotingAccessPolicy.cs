@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace Utilities.Remoting
 {
@@ -15,6 +16,9 @@ namespace Utilities.Remoting
 
             public override RemotingAccessPolicy GetAccessPolicy(MemberInfo method)
             {
+                if (!allowed)
+                    throw new AccessViolationException();
+
                 return allowed ? Allowed : Denied;
             }
         }

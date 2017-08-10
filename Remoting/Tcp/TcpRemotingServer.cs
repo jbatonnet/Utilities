@@ -8,7 +8,6 @@ using System.Text;
 
 namespace Utilities.Remoting.Tcp
 {
-    using IO;
     using RemoteId = Int32;
     using RemoteObject = MarshalByRefObject;
 
@@ -18,7 +17,7 @@ namespace Utilities.Remoting.Tcp
 
         public ushort Port { get; set; }
 
-        private Dictionary<string, RemoteObject> baseObjects = new Dictionary<string, RemoteObject>();
+        private TcpRemotingRegistry registry = new TcpRemotingRegistry();
 
         private TcpListener tcpListener;
 
@@ -43,13 +42,11 @@ namespace Utilities.Remoting.Tcp
 
         public override void AddObject(string name, RemoteObject value)
         {
-            string url = $"http://*:{Port}/{name}/";
-
-            baseObjects.Add(name, value);
+            registry.AddBaseObject(name, value);
         }
         public override void RemoveObject(string name)
         {
-            throw new NotImplementedException();
+            registry.RemoveBaseObject(name);
         }
 
         private void Server_AcceptClient(IAsyncResult result)
@@ -61,7 +58,7 @@ namespace Utilities.Remoting.Tcp
             TcpClient tcpClient = tcpListener.EndAcceptTcpClient(result);
             NetworkStream networkStream = tcpClient.GetStream();
 
-            BinaryRemotingHandler client = new BinaryRemotingHandler(networkStream, baseObjects);
+            BinaryRemotingHandler client = new BinaryRemotingHandler(networkStream, registry);
         }
 
         public override string ToString() => $"TcpRemotingServer {{ Port: {Port} }}";

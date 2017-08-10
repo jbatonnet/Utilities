@@ -23,11 +23,10 @@ namespace Utilities.Remoting
 
             internal override void WriteObject(Stream stream, object value, Type type)
             {
-                RemoteObject remoteObject = value as RemoteObject;
-                if (remoteObject != null)
+                if (value is RemoteObject remoteObject)
                 {
-                    RemoteId remoteId = Client.Registry.RegisterObject(remoteObject);
-                    WriteRemoteObject(stream, remoteId, remoteObject);
+                    Client.Registry.TryGetObject(remoteObject, out RemotingLease lease);
+                    WriteRemoteObject(stream, lease.Id, remoteObject);
                     return;
                 }
 
@@ -89,7 +88,6 @@ namespace Utilities.Remoting
         private Stream commandStream;
         private Stream eventStream;
 
-        private Dictionary<RemoteId, RemotingLease> remotingLeases = new Dictionary<RemoteId, RemotingLease>();
         private ObjectIndex<Delegate> delegateIndex = new ObjectIndex<Delegate>();
 
         private byte[] buffer = new byte[1];
@@ -176,7 +174,7 @@ namespace Utilities.Remoting
                 // Find remote object
                 RemoteId remoteId = reader.ReadInt32();
                 
-                if (!remotingLeases.TryGetValue(remoteId, out remotingLease))
+                if (!Registry.TryGetObject(remoteId, out remotingLease))
                     throw new Exception("Could not find specified remote object");
 
                 // Method info
@@ -206,6 +204,9 @@ namespace Utilities.Remoting
                     RemotingAccessPolicy accessPolicy = remotingLease.Access.GetAccessPolicy(typeMethod);
 
                     object result = typeMethod.Invoke(remotingLease.Object, methodArgs);
+
+                    if (result is RemoteObject remoteObject)
+                        Registry.RegisterObject(remoteObject, accessPolicy);
 
                     writer.Write((byte)BinaryRemotingCommand.Result);
 

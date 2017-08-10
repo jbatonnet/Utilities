@@ -54,6 +54,7 @@
     <Compile Include="TaskHelper.cs" />
     <Compile Include="Tcp\TcpRemotingClient.cs" />
     <Compile Include="Binary\BinaryRemotingSerializer.cs" />
+    <Compile Include="Tcp\TcpRemotingRegistry.cs" />
     <Compile Include="Tcp\TcpRemotingServer.cs" />
   </ItemGroup>
   <ItemGroup>
