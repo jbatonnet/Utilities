@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Utilities.Remoting.Tcp
+namespace Utilities.Remoting.Http
 {
     using RemoteId = Int32;
     using RemoteObject = MarshalByRefObject;
 
-    public class TcpRemotingRegistry : RemotingRegistry
+    public class HttpRemotingRegistry : RemotingRegistry
     {
         private RemoteId lastRemoteId = default(RemoteId);
 

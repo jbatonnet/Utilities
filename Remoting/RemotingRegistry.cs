@@ -1,17 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace Utilities.Remoting
 {
@@ -25,5 +12,9 @@ namespace Utilities.Remoting
         public abstract bool TryGetObject(RemoteObject obj, out RemotingLease lease);
 
         public abstract RemotingLease RegisterObject(RemoteObject obj, RemotingAccessPolicy access);
+
+        public abstract bool TryGetDelegate(RemoteId id, out Delegate delegateObject);
+        public abstract void RegisterDelegate(RemoteId id, Delegate delegateObject);
+        public abstract void RemoveDelegate(RemoteId id);
     }
 }

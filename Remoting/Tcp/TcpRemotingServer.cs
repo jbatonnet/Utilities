@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
-using System.Text;
 
 namespace Utilities.Remoting.Tcp
 {
@@ -18,7 +14,6 @@ namespace Utilities.Remoting.Tcp
         public ushort Port { get; set; }
 
         private TcpRemotingRegistry registry = new TcpRemotingRegistry();
-
         private TcpListener tcpListener;
 
         public TcpRemotingServer() : this(DefaultPort) { }

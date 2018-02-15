@@ -14,18 +14,18 @@ namespace Utilities.Remoting
     {
         private class Serializer : BinaryRemotingSerializer
         {
-            public BinaryRemotingHandler Client { get; }
+            public BinaryRemotingHandler Handler { get; }
 
-            public Serializer(BinaryRemotingHandler client)
+            public Serializer(BinaryRemotingHandler handler)
             {
-                Client = client;
+                Handler = handler;
             }
 
             internal override void WriteObject(Stream stream, object value, Type type)
             {
                 if (value is RemoteObject remoteObject)
                 {
-                    Client.Registry.TryGetObject(remoteObject, out RemotingLease lease);
+                    Handler.Registry.TryGetObject(remoteObject, out RemotingLease lease);
                     WriteRemoteObject(stream, lease.Id, remoteObject);
                     return;
                 }
@@ -62,11 +62,11 @@ namespace Utilities.Remoting
                     RemoteId delegateId = reader.ReadInt32();
                     Type delegateType = ReadType(stream);
 
-                    Delegate delegateObject = Client.delegateIndex.GetObject(delegateId);
-                    if (delegateObject == null)
-                    {
+                    Delegate delegateObject;
+                    if (!Handler.Registry.TryGetDelegate(delegateId, out delegateObject))
+                    { 
                         delegateObject = CreateDelegate(delegateType, delegateId);
-                        Client.delegateIndex.Register(delegateId, delegateObject);
+                        Handler.Registry.RegisterDelegate(delegateId, delegateObject);
                     }
 
                     return delegateObject;
@@ -75,7 +75,7 @@ namespace Utilities.Remoting
 
             protected override object OnDelegateCall(int remoteId, object[] args)
             {
-                return Client.ProcessDelegate(remoteId, args);
+                return Handler.ProcessDelegate(remoteId, args);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Utilities.Remoting
             serializer = new Serializer(this);
 
             stream = new BlockingStream(stream);
-            //stream = new DebugStream(stream, "Server");
+            stream = new DebugStream(stream, "Server");
 
             muxer = new MuxerStream(stream) { Marker = "Server" };
             commandStream = muxer.GetCanal("Commands");

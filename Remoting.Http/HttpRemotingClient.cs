@@ -19,7 +19,7 @@ namespace Utilities.Remoting.Http
 
     public class HttpRemotingClient : RemotingClient
     {
-        private class Serializer : HttpRemotingSerializer
+        private class Serializer : XmlRemotingSerializer
         {
             public HttpRemotingClient Client { get; }
 
@@ -30,9 +30,7 @@ namespace Utilities.Remoting.Http
 
             internal override XElement WrapObject(object value)
             {
-                Delegate target = value as Delegate;
-
-                if (target != null)
+                if (value is Delegate target)
                 {
                     RemoteId id = Client.RegisterDelegate(target);
                     return WrapDelegate(id, target);
@@ -202,22 +200,22 @@ namespace Utilities.Remoting.Http
             return new ReturnMessage(result, methodCallMessage.Args, methodCallMessage.ArgCount, methodCallMessage.LogicalCallContext, methodCallMessage);
         }
 
-        private async Task<string> GetQuery(string host, ushort port, string url)
+        private Task<string> GetQuery(string host, ushort port, string url)
         {
-            return await Query(host, port, url, "GET", null);
+            return Query(host, port, url, "GET", null);
         }
-        private async Task<string> PostQuery(string host, ushort port, string url, string content)
+        private Task<string> PostQuery(string host, ushort port, string url, string content)
         {
-            return await Query(host, port, url, "POST", content);
+            return Query(host, port, url, "POST", content);
         }
 
-        private async Task<string> Query(string host, ushort port, string url, string method, string content)
+        private Task<string> Query(string host, ushort port, string url, string method, string content)
         {
-            return await HttpClientQuery(host, port, url, method, content);
+            return HttpClientQuery(host, port, url, method, content);
         }
-        private async Task<string> RawQuery(string host, ushort port, string url, string method, string content)
+        private Task<string> RawQuery(string host, ushort port, string url, string method, string content)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 TcpClient client = new TcpClient(host, port);
 

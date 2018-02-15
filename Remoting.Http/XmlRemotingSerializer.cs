@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Utilities.Remoting.Http
 {
-    internal abstract class HttpRemotingSerializer : RemotingSerializer
+    internal abstract class XmlRemotingSerializer : RemotingSerializer
     {
         private static Lazy<MethodInfo> toArrayMethod = new Lazy<MethodInfo>(() => typeof(Enumerable).GetMethod("ToArray"));
 
@@ -39,8 +39,13 @@ namespace Utilities.Remoting.Http
             Type type = ResolveType(typeAttribute.Value);
 
             XElement messageElement = element.Element("Message");
+            string message = messageElement.Value;
 
-            return new Exception(messageElement.Value);
+            XElement stackTraceElement = element.Element("StackTrace");
+            string stackTrace = stackTraceElement.Value;
+
+            // TODO: Rebuild exception
+            return new Exception(message + stackTrace);
         }
 
         internal virtual XElement WrapObject(object value)
@@ -49,16 +54,56 @@ namespace Utilities.Remoting.Http
                 return new XElement("Null");
 
             Type type = value.GetType();
-            TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
 
-            if (type.IsValueType || type == typeof(string))
+            if (type == typeof(string))
             {
                 XElement valueElement = new XElement("Value");
 
                 valueElement.Add(new XAttribute("Type", type.FullName));
-                valueElement.Add(typeConverter.ConvertToString(value));
+                valueElement.Add((string)value);
 
                 return valueElement;
+            }
+
+            TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
+
+            if (type.IsValueType)
+            {
+                // Let's be sure that we can convert back to structure
+                if (typeConverter.CanConvertFrom(typeof(string)))
+                {
+                    XElement valueElement = new XElement("Value");
+
+                    valueElement.Add(new XAttribute("Type", type.FullName));
+                    valueElement.Add(typeConverter.ConvertToString(value));
+
+                    return valueElement;
+                }
+
+                // Else try to send structure members
+                else
+                {
+                    XElement structElement = new XElement("Struct");
+
+                    structElement.Add(new XAttribute("Type", type.FullName));
+
+                    foreach (FieldInfo field in type.GetFields())
+                    {
+                        structElement.Add(new XElement("Field",
+                            new XAttribute("Name", field.Name),
+                            WrapObject(field.GetValue(value))
+                        ));
+                    }
+                    foreach (PropertyInfo property in type.GetProperties().Where(p => p.SetMethod != null))
+                    {
+                        structElement.Add(new XElement("Property",
+                            new XAttribute("Name", property.Name),
+                            WrapObject(property.GetValue(value))
+                        ));
+                    }
+
+                    return structElement;
+                }
             }
 
             // Exception for byte array, to quickly transfer big buffers
@@ -71,10 +116,8 @@ namespace Utilities.Remoting.Http
                 return bufferElement;
             }
 
-            // TODO: Some collections can be sent directly
-
             // Enumerate values before sending them
-            /*if (!type.IsArray && typeof(IEnumerable).IsAssignableFrom(type))
+            if (!type.IsArray && typeof(IEnumerable).IsAssignableFrom(type))
             {
                 Type genericEnumerable = type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
                 if (genericEnumerable != null)
@@ -87,7 +130,7 @@ namespace Utilities.Remoting.Http
                     value = genericToArrayMethodInfo.Invoke(null, new object[] { value });
                     type = genericToArrayMethodInfo.ReturnType;
                 }
-            }*/
+            }
 
             if (type.IsArray)
             {
@@ -103,26 +146,6 @@ namespace Utilities.Remoting.Http
                     arrayElement.Add(WrapObject(array.GetValue(i)));
 
                 return arrayElement;
-            }
-
-            // Try to send simple structures directly
-            if (type.IsValueType)
-            {
-                XElement structureElement = new XElement("Struct");
-                structureElement.Add(new XAttribute("Type", type.GetElementType().FullName));
-
-                foreach (FieldInfo fieldInfo in type.GetFields())
-                {
-                    XElement fieldElement = new XElement("Field");
-
-                    fieldElement.Add(new XAttribute("Name", fieldInfo.Name));
-                    fieldElement.Add(new XAttribute("Type", fieldInfo.FieldType.FullName));
-                    fieldElement.Add(WrapObject(fieldInfo.GetValue(value)));
-
-                    structureElement.Add(fieldElement);
-                }
-
-                return structureElement;
             }
 
             throw new NotSupportedException("Unable to wrap object of type " + type.FullName);
@@ -144,6 +167,35 @@ namespace Utilities.Remoting.Http
                     TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
 
                     return typeConverter.ConvertFromString(element.Value);
+                }
+
+                case "Struct":
+                case "Structure":
+                {
+                    XAttribute typeAttribute = element.Attribute("Type");
+
+                    Type type = ResolveType(typeAttribute.Value);
+                    object value = Activator.CreateInstance(type);
+
+                    foreach (XElement fieldElement in element.Elements("Field"))
+                    {
+                        XAttribute nameAttribute = fieldElement.Attribute("Name");
+                        string name = nameAttribute.Value;
+
+                        FieldInfo field = type.GetField(name);
+                        field.SetValue(value, UnwrapObject(fieldElement.Element("Value")));
+                    }
+
+                    foreach (XElement propertyElement in element.Elements("Property"))
+                    {
+                        XAttribute nameAttribute = propertyElement.Attribute("Name");
+                        string name = nameAttribute.Value;
+
+                        PropertyInfo property = type.GetProperty(name);
+                        property.SetValue(value, UnwrapObject(propertyElement.Element("Value")));
+                    }
+
+                    return value;
                 }
 
                 case "Buffer":

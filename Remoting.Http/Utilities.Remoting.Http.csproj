@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpRemotingClient.cs" />
-    <Compile Include="HttpRemotingSerializer.cs" />
+    <Compile Include="XmlRemotingSerializer.cs" />
+    <Compile Include="XmlRemotingHandler.cs" />
     <Compile Include="HttpRemotingServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="HttpRemotingRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Remoting\Utilities.Remoting.csproj">
